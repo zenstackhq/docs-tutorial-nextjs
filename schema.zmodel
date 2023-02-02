@@ -14,8 +14,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-plugin nestjs {
-  provider = '@zenstack/react-hooks'
+plugin reactHooks {
+  provider = '@zenstackhq/react'
   output = "./src/lib/hooks"
 }
 
@@ -56,7 +56,6 @@ model Account {
   id_token          String? // @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@unique([provider, providerAccountId])
 }
 
@@ -91,6 +90,5 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
-
   @@unique([identifier, token])
 }

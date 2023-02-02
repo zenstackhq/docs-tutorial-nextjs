@@ -9,13 +9,14 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "update": "npm i @zenstackhq/runtime@canary @zenstackhq/next@canary && npm i -D zenstack@canary"
+    "update": "npm i @zenstackhq/runtime@latest @zenstackhq/next@latest && npm i -D zenstack@latest"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.5.0",
-    "@zenstackhq/next": "^0.6.0-pre.18",
-    "@zenstackhq/runtime": "^0.6.0-pre.18",
+    "@zenstackhq/next": "^1.0.0-alpha.28",
+    "@zenstackhq/react": "^1.0.0-alpha.28",
+    "@zenstackhq/runtime": "^1.0.0-alpha.28",
     "next": "13.0.2",
     "next-auth": "^4.18.3",
     "react": "18.2.0",
@@ -37,7 +38,7 @@
     "prisma": "^4.5.0",
     "tailwindcss": "^3.2.0",
     "typescript": "^4.8.4",
-    "zenstack": "^0.6.0-pre.18"
+    "zenstack": "^1.0.0-alpha.28"
   },
   "ct3aMetadata": {
     "initVersion": "6.11.3"

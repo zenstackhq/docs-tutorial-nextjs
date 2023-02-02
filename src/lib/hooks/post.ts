@@ -1,7 +1,8 @@
+/* eslint-disable */
 import type { Prisma, Post } from "@prisma/client";
 import { useContext } from 'react';
-import { RequestHandlerContext } from '@zenstackhq/next/client';
-import { request, type RequestOptions } from '@zenstackhq/runtime/client';
+import { RequestHandlerContext, type RequestOptions } from '@zenstackhq/react/runtime';
+import * as request from '@zenstackhq/react/runtime';
 
 export function usePost() {
     const { endpoint } = useContext(RequestHandlerContext);
@@ -19,10 +20,6 @@ export function usePost() {
                 throw err;
             }
         }
-    }
-
-    async function createMany<T extends Prisma.PostCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.PostCreateManyArgs>) {
-        return await request.post<Prisma.SelectSubset<T, Prisma.PostCreateManyArgs>, Prisma.BatchPayload>(`${endpoint}/post/createMany`, args, mutate);
     }
 
     function findMany<T extends Prisma.PostFindManyArgs>(args?: Prisma.SelectSubset<T, Prisma.PostFindManyArgs>, options?: RequestOptions<Array<Prisma.PostGetPayload<T>>>) {
@@ -132,9 +129,5 @@ export function usePost() {
         }[OrderFields]>(args: Prisma.SubsetIntersection<T, Prisma.PostGroupByArgs, OrderByArg> & InputErrors, options?: RequestOptions<{} extends InputErrors ? Prisma.GetPostGroupByPayload<T> : InputErrors>) {
         return request.get<{} extends InputErrors ? Prisma.GetPostGroupByPayload<T> : InputErrors>(`${endpoint}/post/groupBy`, args, options);
     }
-
-    function count<T extends Prisma.PostCountArgs>(args: Prisma.Subset<T, Prisma.PostCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.PostCountAggregateOutputType> : number>) {
-        return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.PostCountAggregateOutputType> : number>(`${endpoint}/post/count`, args, options);
-    }
-    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy };
 }

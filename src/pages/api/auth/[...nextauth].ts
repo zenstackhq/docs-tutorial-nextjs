@@ -25,15 +25,6 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
-    // highlight-start
-    // Remove DiscordProvider below:
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
-    // highlight-end
-
-    // highlight-start
     CredentialsProvider({
       credentials: {
         email: {
@@ -45,7 +36,6 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: authorize(prisma),
     }),
-    // highlight-end
   ],
 };
 
