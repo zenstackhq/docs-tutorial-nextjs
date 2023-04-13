@@ -12,12 +12,6 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model Example {
-    id String @id() @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-}
-
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
 model Post {
@@ -47,6 +41,7 @@ model Account {
     id_token String?
     session_state String?
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    zenstack_guard Boolean @default(true)
     @@unique([provider, providerAccountId])
 }
 
@@ -56,6 +51,7 @@ model Session {
     userId String
     expires DateTime
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    zenstack_guard Boolean @default(true)
 }
 
 /// @@allow('create,read', true)
@@ -82,5 +78,6 @@ model VerificationToken {
     identifier String
     token String @unique()
     expires DateTime
+    zenstack_guard Boolean @default(true)
     @@unique([identifier, token])
 }
