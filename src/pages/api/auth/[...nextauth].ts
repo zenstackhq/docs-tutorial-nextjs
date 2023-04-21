@@ -5,7 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "../../../server/db/client";
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient, UserRole } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
@@ -18,8 +18,17 @@ export const authOptions: NextAuthOptions = {
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub!;
+        session.user.role = token.role as UserRole;
       }
       return session;
+    },
+    async jwt({ token, account, user }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+        token.role = user?.role;
+      }
+      return token;
     },
   },
   // Configure one or more authentication providers
@@ -63,6 +72,7 @@ function authorize(prisma: PrismaClient) {
         id: true,
         email: true,
         password: true,
+        role: true,
       },
     });
 
@@ -79,6 +89,7 @@ function authorize(prisma: PrismaClient) {
     return {
       id: maybeUser.id,
       email: maybeUser.email,
+      role: maybeUser.role,
     };
   };
 }

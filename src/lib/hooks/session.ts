@@ -23,6 +23,10 @@ export function useSession() {
         }
     }
 
+    async function createMany<T extends Prisma.SessionCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.SessionCreateManyArgs>) {
+        return await request.post<Prisma.SelectSubset<T, Prisma.SessionCreateManyArgs>, Prisma.BatchPayload>(`${endpoint}/session/createMany`, args, mutate);
+    }
+
     function findMany<T extends Prisma.SessionFindManyArgs>(args?: Prisma.SelectSubset<T, Prisma.SessionFindManyArgs>, options?: RequestOptions<Array<Prisma.SessionGetPayload<T>>>) {
         return request.get<Array<Prisma.SessionGetPayload<T>>>(`${endpoint}/session/findMany`, args, options);
     }
@@ -134,5 +138,5 @@ export function useSession() {
     function count<T extends Prisma.SessionCountArgs>(args: Prisma.Subset<T, Prisma.SessionCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SessionCountAggregateOutputType> : number>) {
         return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.SessionCountAggregateOutputType> : number>(`${endpoint}/session/count`, args, options);
     }
-    return { create, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
 }

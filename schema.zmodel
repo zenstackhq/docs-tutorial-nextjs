@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -17,6 +17,15 @@ datasource db {
 plugin reactHooks {
   provider = '@zenstackhq/react'
   output = "./src/lib/hooks"
+}
+
+
+enum UserRole {
+  PARENT
+  TEACHER
+  ADMIN
+  OWNER
+  SUPERADMIN
 }
 
 model Post {
@@ -30,6 +39,8 @@ model Post {
 
   // author has full access
   @@allow('all', auth() == author)
+  @@allow('all', auth().role == SUPERADMIN)
+
 
   // logged-in users can view published posts
   @@allow('read', auth() != null && published)
@@ -71,6 +82,7 @@ model User {
   image String?
   accounts Account[]
   sessions Session[]
+  role UserRole @default(PARENT)
 
   // everyone can signup, and user profile is also publicly readable
   @@allow('create,read', true)

@@ -23,6 +23,10 @@ export function useAccount() {
         }
     }
 
+    async function createMany<T extends Prisma.AccountCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>) {
+        return await request.post<Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>, Prisma.BatchPayload>(`${endpoint}/account/createMany`, args, mutate);
+    }
+
     function findMany<T extends Prisma.AccountFindManyArgs>(args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>, options?: RequestOptions<Array<Prisma.AccountGetPayload<T>>>) {
         return request.get<Array<Prisma.AccountGetPayload<T>>>(`${endpoint}/account/findMany`, args, options);
     }
@@ -134,5 +138,5 @@ export function useAccount() {
     function count<T extends Prisma.AccountCountArgs>(args: Prisma.Subset<T, Prisma.AccountCountArgs>, options?: RequestOptions<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType> : number>) {
         return request.get<T extends { select: any; } ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType> : number>(`${endpoint}/account/count`, args, options);
     }
-    return { create, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
+    return { create, createMany, findMany, findUnique, findFirst, update, updateMany, upsert, del, deleteMany, aggregate, groupBy, count };
 }
