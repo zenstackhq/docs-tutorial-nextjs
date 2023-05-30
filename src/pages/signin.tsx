@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import Router from "next/router";
 import { useState, type FormEvent } from "react";
 
@@ -57,6 +58,13 @@ const Signin: NextPage = () => {
           className="cursor-pointer rounded border border-gray-500 py-4 text-white"
         />
       </form>
+      <div className="mt-2 text-base font-medium text-gray-300">
+        Don&apos;t have an account yet?{" "}
+        <Link href="/signup" className="text-primary-700 underline">
+          {" "}
+          Signup here{" "}
+        </Link>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { requestHandler } from "@zenstackhq/next";
 import { withPresets } from "@zenstackhq/runtime";
+import { NextRequestHandler } from "@zenstackhq/server/next";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "../../../server/common/get-server-auth-session";
 import { prisma } from "../../../server/db/client";
@@ -11,4 +11,4 @@ async function getPrisma(req: NextApiRequest, res: NextApiResponse) {
   return withPresets(prisma, { user: session?.user });
 }
 
-export default requestHandler({ getPrisma });
+export default NextRequestHandler({ getPrisma });

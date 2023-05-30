@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
-import { usePost } from "../lib/hooks";
+import { useFindManyPost, useMutatePost } from "../lib/hooks";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -40,10 +40,10 @@ const Posts = ({ user }: { user: AuthUser }) => {
   const { data: session } = useSession();
 
   // Post crud hooks
-  const { findMany, create, update, del } = usePost();
+  const { createPost, updatePost, deletePost } = useMutatePost();
 
   // list all posts that're visible to the current user
-  const { data: posts } = findMany(
+  const { data: posts } = useFindManyPost(
     {
       include: { author: true },
       orderBy: { createdAt: "desc" },
@@ -59,19 +59,19 @@ const Posts = ({ user }: { user: AuthUser }) => {
   async function onCreatePost() {
     const title = prompt("Enter post title");
     if (title) {
-      await create({ data: { title, authorId: user.id } });
+      await createPost({ data: { title, authorId: user.id } });
     }
   }
 
   async function onTogglePublished(post: Post) {
-    await update({
+    await updatePost({
       where: { id: post.id },
       data: { published: !post.published },
     });
   }
 
   async function onDelete(post: Post) {
-    await del({ where: { id: post.id } });
+    await deletePost({ where: { id: post.id } });
   }
 
   return (

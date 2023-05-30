@@ -14,8 +14,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-plugin reactHooks {
-  provider = '@zenstackhq/react'
+plugin hooks {
+  provider = '@zenstackhq/swr'
   output = "./src/lib/hooks"
 }
 

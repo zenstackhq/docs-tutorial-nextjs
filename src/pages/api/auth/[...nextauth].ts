@@ -1,6 +1,4 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-//import DiscordProvider from "next-auth/providers/discord";
-// Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -17,6 +15,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, token }) {
       if (session.user) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         session.user.id = token.sub!;
       }
       return session;

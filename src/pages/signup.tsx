@@ -1,18 +1,20 @@
 import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import Router from "next/router";
 import { useState, type FormEvent } from "react";
-import { useUser } from "../lib/hooks";
+import { useMutateUser } from "../lib/hooks";
 
 const Signup: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { create: signup } = useUser();
+  const { createUser: signup } = useMutateUser();
 
   async function onSignup(e: FormEvent) {
     e.preventDefault();
     try {
       await signup({ data: { email, password } });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
       if (err.info?.prisma && err.info?.code === "P2002") {
@@ -63,6 +65,13 @@ const Signup: NextPage = () => {
           className="cursor-pointer rounded border border-gray-500 py-4 text-white"
         />
       </form>
+      <div className="mt-2 text-base font-medium text-gray-300">
+        Already have an account?{" "}
+        <Link href="/signin" className="text-primary-700 underline">
+          {" "}
+          Login here{" "}
+        </Link>
+      </div>
     </div>
   );
 };
