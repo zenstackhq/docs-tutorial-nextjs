@@ -123,7 +123,7 @@ export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findMany`, args, options);
+    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findUnique`, args, options);
 }
 
 export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
@@ -131,7 +131,7 @@ export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
     options?: RequestOptions<Prisma.AccountGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findMany`, args, options);
+    return request.get<Prisma.AccountGetPayload<T>>(`${endpoint}/account/findFirst`, args, options);
 }
 
 export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
@@ -139,7 +139,7 @@ export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
     options?: RequestOptions<Prisma.GetAccountAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetAccountAggregateType<T>>(`${endpoint}/account/findMany`, args, options);
+    return request.get<Prisma.GetAccountAggregateType<T>>(`${endpoint}/account/aggregate`, args, options);
 }
 
 export function useGroupByAccount<
@@ -220,7 +220,7 @@ export function useGroupByAccount<
                   }
               >
             : InputErrors
-    >(`${endpoint}/account/findMany`, args, options);
+    >(`${endpoint}/account/groupBy`, args, options);
 }
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(
@@ -240,5 +240,5 @@ export function useCountAccount<T extends Prisma.AccountCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType>
             : number
-    >(`${endpoint}/account/findMany`, args, options);
+    >(`${endpoint}/account/count`, args, options);
 }

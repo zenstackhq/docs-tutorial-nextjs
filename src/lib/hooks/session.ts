@@ -123,7 +123,7 @@ export function useFindUniqueSession<T extends Prisma.SessionFindUniqueArgs>(
     options?: RequestOptions<Prisma.SessionGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findMany`, args, options);
+    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findUnique`, args, options);
 }
 
 export function useFindFirstSession<T extends Prisma.SessionFindFirstArgs>(
@@ -131,7 +131,7 @@ export function useFindFirstSession<T extends Prisma.SessionFindFirstArgs>(
     options?: RequestOptions<Prisma.SessionGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findMany`, args, options);
+    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findFirst`, args, options);
 }
 
 export function useAggregateSession<T extends Prisma.SessionAggregateArgs>(
@@ -139,7 +139,7 @@ export function useAggregateSession<T extends Prisma.SessionAggregateArgs>(
     options?: RequestOptions<Prisma.GetSessionAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSessionAggregateType<T>>(`${endpoint}/session/findMany`, args, options);
+    return request.get<Prisma.GetSessionAggregateType<T>>(`${endpoint}/session/aggregate`, args, options);
 }
 
 export function useGroupBySession<
@@ -220,7 +220,7 @@ export function useGroupBySession<
                   }
               >
             : InputErrors
-    >(`${endpoint}/session/findMany`, args, options);
+    >(`${endpoint}/session/groupBy`, args, options);
 }
 
 export function useCountSession<T extends Prisma.SessionCountArgs>(
@@ -240,5 +240,5 @@ export function useCountSession<T extends Prisma.SessionCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SessionCountAggregateOutputType>
             : number
-    >(`${endpoint}/session/findMany`, args, options);
+    >(`${endpoint}/session/count`, args, options);
 }

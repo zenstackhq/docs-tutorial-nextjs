@@ -146,7 +146,11 @@ export function useFindUniqueVerificationToken<T extends Prisma.VerificationToke
     options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.VerificationTokenGetPayload<T>>(`${endpoint}/verificationToken/findMany`, args, options);
+    return request.get<Prisma.VerificationTokenGetPayload<T>>(
+        `${endpoint}/verificationToken/findUnique`,
+        args,
+        options,
+    );
 }
 
 export function useFindFirstVerificationToken<T extends Prisma.VerificationTokenFindFirstArgs>(
@@ -154,7 +158,7 @@ export function useFindFirstVerificationToken<T extends Prisma.VerificationToken
     options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.VerificationTokenGetPayload<T>>(`${endpoint}/verificationToken/findMany`, args, options);
+    return request.get<Prisma.VerificationTokenGetPayload<T>>(`${endpoint}/verificationToken/findFirst`, args, options);
 }
 
 export function useAggregateVerificationToken<T extends Prisma.VerificationTokenAggregateArgs>(
@@ -163,7 +167,7 @@ export function useAggregateVerificationToken<T extends Prisma.VerificationToken
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
     return request.get<Prisma.GetVerificationTokenAggregateType<T>>(
-        `${endpoint}/verificationToken/findMany`,
+        `${endpoint}/verificationToken/aggregate`,
         args,
         options,
     );
@@ -247,7 +251,7 @@ export function useGroupByVerificationToken<
                   }
               >
             : InputErrors
-    >(`${endpoint}/verificationToken/findMany`, args, options);
+    >(`${endpoint}/verificationToken/groupBy`, args, options);
 }
 
 export function useCountVerificationToken<T extends Prisma.VerificationTokenCountArgs>(
@@ -267,5 +271,5 @@ export function useCountVerificationToken<T extends Prisma.VerificationTokenCoun
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.VerificationTokenCountAggregateOutputType>
             : number
-    >(`${endpoint}/verificationToken/findMany`, args, options);
+    >(`${endpoint}/verificationToken/count`, args, options);
 }

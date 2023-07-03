@@ -115,7 +115,7 @@ export function useFindUniquePost<T extends Prisma.PostFindUniqueArgs>(
     options?: RequestOptions<Prisma.PostGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findMany`, args, options);
+    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findUnique`, args, options);
 }
 
 export function useFindFirstPost<T extends Prisma.PostFindFirstArgs>(
@@ -123,7 +123,7 @@ export function useFindFirstPost<T extends Prisma.PostFindFirstArgs>(
     options?: RequestOptions<Prisma.PostGetPayload<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findMany`, args, options);
+    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findFirst`, args, options);
 }
 
 export function useAggregatePost<T extends Prisma.PostAggregateArgs>(
@@ -131,7 +131,7 @@ export function useAggregatePost<T extends Prisma.PostAggregateArgs>(
     options?: RequestOptions<Prisma.GetPostAggregateType<T>>,
 ) {
     const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetPostAggregateType<T>>(`${endpoint}/post/findMany`, args, options);
+    return request.get<Prisma.GetPostAggregateType<T>>(`${endpoint}/post/aggregate`, args, options);
 }
 
 export function useGroupByPost<
@@ -212,7 +212,7 @@ export function useGroupByPost<
                   }
               >
             : InputErrors
-    >(`${endpoint}/post/findMany`, args, options);
+    >(`${endpoint}/post/groupBy`, args, options);
 }
 
 export function useCountPost<T extends Prisma.PostCountArgs>(
@@ -232,5 +232,5 @@ export function useCountPost<T extends Prisma.PostCountArgs>(
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.PostCountAggregateOutputType>
             : number
-    >(`${endpoint}/post/findMany`, args, options);
+    >(`${endpoint}/post/count`, args, options);
 }
