@@ -1,11 +1,16 @@
 /* eslint-disable */
 import type { Prisma, VerificationToken } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateVerificationToken() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/verificationToken/find`,
         `${endpoint}/verificationToken/aggregate`,
@@ -17,107 +22,73 @@ export function useMutateVerificationToken() {
     async function createVerificationToken<T extends Prisma.VerificationTokenCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateArgs>,
     ) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, VerificationToken, Prisma.VerificationTokenGetPayload<T>>>(
-                `${endpoint}/verificationToken/create`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<CheckSelect<T, VerificationToken, Prisma.VerificationTokenGetPayload<T>>, true>(
+            `${endpoint}/verificationToken/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateVerificationToken<T extends Prisma.VerificationTokenUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateArgs>,
     ) {
-        try {
-            return await request.put<Prisma.VerificationTokenGetPayload<T>>(
-                `${endpoint}/verificationToken/update`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.VerificationTokenGetPayload<T>, true>(
+            `${endpoint}/verificationToken/update`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateManyVerificationToken<T extends Prisma.VerificationTokenUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/verificationToken/updateMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(
+            `${endpoint}/verificationToken/updateMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function upsertVerificationToken<T extends Prisma.VerificationTokenUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpsertArgs>,
     ) {
-        try {
-            return await request.post<Prisma.VerificationTokenGetPayload<T>>(
-                `${endpoint}/verificationToken/upsert`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.VerificationTokenGetPayload<T>, true>(
+            `${endpoint}/verificationToken/upsert`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteVerificationToken<T extends Prisma.VerificationTokenDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteArgs>,
     ) {
-        try {
-            return await request.del<Prisma.VerificationTokenGetPayload<T>>(
-                `${endpoint}/verificationToken/delete`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.VerificationTokenGetPayload<T>, true>(
+            `${endpoint}/verificationToken/delete`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteManyVerificationToken<T extends Prisma.VerificationTokenDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/verificationToken/deleteMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(
+            `${endpoint}/verificationToken/deleteMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
     return {
         createVerificationToken,
@@ -133,11 +104,12 @@ export function useFindManyVerificationToken<T extends Prisma.VerificationTokenF
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs>,
     options?: RequestOptions<Array<Prisma.VerificationTokenGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.VerificationTokenGetPayload<T>>>(
         `${endpoint}/verificationToken/findMany`,
         args,
         options,
+        fetch,
     );
 }
 
@@ -145,11 +117,12 @@ export function useFindUniqueVerificationToken<T extends Prisma.VerificationToke
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindUniqueArgs>,
     options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Prisma.VerificationTokenGetPayload<T>>(
         `${endpoint}/verificationToken/findUnique`,
         args,
         options,
+        fetch,
     );
 }
 
@@ -157,19 +130,25 @@ export function useFindFirstVerificationToken<T extends Prisma.VerificationToken
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindFirstArgs>,
     options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.VerificationTokenGetPayload<T>>(`${endpoint}/verificationToken/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.VerificationTokenGetPayload<T>>(
+        `${endpoint}/verificationToken/findFirst`,
+        args,
+        options,
+        fetch,
+    );
 }
 
 export function useAggregateVerificationToken<T extends Prisma.VerificationTokenAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.VerificationTokenAggregateArgs>,
     options?: RequestOptions<Prisma.GetVerificationTokenAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Prisma.GetVerificationTokenAggregateType<T>>(
         `${endpoint}/verificationToken/aggregate`,
         args,
         options,
+        fetch,
     );
 }
 
@@ -180,7 +159,7 @@ export function useGroupByVerificationToken<
         ? { orderBy: Prisma.VerificationTokenGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.VerificationTokenGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -227,7 +206,7 @@ export function useGroupByVerificationToken<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.VerificationTokenGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -238,11 +217,11 @@ export function useGroupByVerificationToken<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.VerificationTokenGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -251,7 +230,7 @@ export function useGroupByVerificationToken<
                   }
               >
             : InputErrors
-    >(`${endpoint}/verificationToken/groupBy`, args, options);
+    >(`${endpoint}/verificationToken/groupBy`, args, options, fetch);
 }
 
 export function useCountVerificationToken<T extends Prisma.VerificationTokenCountArgs>(
@@ -264,12 +243,12 @@ export function useCountVerificationToken<T extends Prisma.VerificationTokenCoun
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.VerificationTokenCountAggregateOutputType>
             : number
-    >(`${endpoint}/verificationToken/count`, args, options);
+    >(`${endpoint}/verificationToken/count`, args, options, fetch);
 }

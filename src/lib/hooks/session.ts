@@ -1,11 +1,16 @@
 /* eslint-disable */
 import type { Prisma, Session } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutateSession() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/session/find`,
         `${endpoint}/session/aggregate`,
@@ -17,95 +22,73 @@ export function useMutateSession() {
     async function createSession<T extends Prisma.SessionCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionCreateArgs>,
     ) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, Session, Prisma.SessionGetPayload<T>>>(
-                `${endpoint}/session/create`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<CheckSelect<T, Session, Prisma.SessionGetPayload<T>>, true>(
+            `${endpoint}/session/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateSession<T extends Prisma.SessionUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionUpdateArgs>,
     ) {
-        try {
-            return await request.put<Prisma.SessionGetPayload<T>>(`${endpoint}/session/update`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.SessionGetPayload<T>, true>(
+            `${endpoint}/session/update`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updateManySession<T extends Prisma.SessionUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/session/updateMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(
+            `${endpoint}/session/updateMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
 
     async function upsertSession<T extends Prisma.SessionUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionUpsertArgs>,
     ) {
-        try {
-            return await request.post<Prisma.SessionGetPayload<T>>(`${endpoint}/session/upsert`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.SessionGetPayload<T>, true>(
+            `${endpoint}/session/upsert`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteSession<T extends Prisma.SessionDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionDeleteArgs>,
     ) {
-        try {
-            return await request.del<Prisma.SessionGetPayload<T>>(`${endpoint}/session/delete`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.SessionGetPayload<T>, true>(
+            `${endpoint}/session/delete`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function deleteManySession<T extends Prisma.SessionDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.SessionDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/session/deleteMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(
+            `${endpoint}/session/deleteMany`,
+            args,
+            mutate,
+            fetch,
+            false,
+        );
     }
     return { createSession, updateSession, updateManySession, upsertSession, deleteSession, deleteManySession };
 }
@@ -114,32 +97,32 @@ export function useFindManySession<T extends Prisma.SessionFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SessionFindManyArgs>,
     options?: RequestOptions<Array<Prisma.SessionGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.SessionGetPayload<T>>>(`${endpoint}/session/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.SessionGetPayload<T>>>(`${endpoint}/session/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueSession<T extends Prisma.SessionFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SessionFindUniqueArgs>,
     options?: RequestOptions<Prisma.SessionGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstSession<T extends Prisma.SessionFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SessionFindFirstArgs>,
     options?: RequestOptions<Prisma.SessionGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.SessionGetPayload<T>>(`${endpoint}/session/findFirst`, args, options, fetch);
 }
 
 export function useAggregateSession<T extends Prisma.SessionAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.SessionAggregateArgs>,
     options?: RequestOptions<Prisma.GetSessionAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetSessionAggregateType<T>>(`${endpoint}/session/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetSessionAggregateType<T>>(`${endpoint}/session/aggregate`, args, options, fetch);
 }
 
 export function useGroupBySession<
@@ -149,7 +132,7 @@ export function useGroupBySession<
         ? { orderBy: Prisma.SessionGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.SessionGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -196,7 +179,7 @@ export function useGroupBySession<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SessionGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SessionGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SessionGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -207,11 +190,11 @@ export function useGroupBySession<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SessionGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SessionGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SessionGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -220,7 +203,7 @@ export function useGroupBySession<
                   }
               >
             : InputErrors
-    >(`${endpoint}/session/groupBy`, args, options);
+    >(`${endpoint}/session/groupBy`, args, options, fetch);
 }
 
 export function useCountSession<T extends Prisma.SessionCountArgs>(
@@ -233,12 +216,12 @@ export function useCountSession<T extends Prisma.SessionCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SessionCountAggregateOutputType>
             : number
-    >(`${endpoint}/session/count`, args, options);
+    >(`${endpoint}/session/count`, args, options, fetch);
 }

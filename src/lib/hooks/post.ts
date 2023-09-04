@@ -1,11 +1,16 @@
 /* eslint-disable */
 import type { Prisma, Post } from '@prisma/client';
 import { useContext } from 'react';
-import { RequestHandlerContext, type RequestOptions } from './_helper';
-import * as request from './_helper';
+import {
+    RequestHandlerContext,
+    type RequestOptions,
+    type PickEnumerable,
+    type CheckSelect,
+} from '@zenstackhq/swr/runtime';
+import * as request from '@zenstackhq/swr/runtime';
 
 export function useMutatePost() {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     const prefixesToMutate = [
         `${endpoint}/post/find`,
         `${endpoint}/post/aggregate`,
@@ -15,89 +20,37 @@ export function useMutatePost() {
     const mutate = request.getMutate(prefixesToMutate);
 
     async function createPost<T extends Prisma.PostCreateArgs>(args: Prisma.SelectSubset<T, Prisma.PostCreateArgs>) {
-        try {
-            return await request.post<Prisma.CheckSelect<T, Post, Prisma.PostGetPayload<T>>>(
-                `${endpoint}/post/create`,
-                args,
-                mutate,
-            );
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<CheckSelect<T, Post, Prisma.PostGetPayload<T>>, true>(
+            `${endpoint}/post/create`,
+            args,
+            mutate,
+            fetch,
+            true,
+        );
     }
 
     async function updatePost<T extends Prisma.PostUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.PostUpdateArgs>) {
-        try {
-            return await request.put<Prisma.PostGetPayload<T>>(`${endpoint}/post/update`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.PostGetPayload<T>, true>(`${endpoint}/post/update`, args, mutate, fetch, true);
     }
 
     async function updateManyPost<T extends Prisma.PostUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.PostUpdateManyArgs>,
     ) {
-        try {
-            return await request.put<Prisma.BatchPayload>(`${endpoint}/post/updateMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.put<Prisma.BatchPayload, false>(`${endpoint}/post/updateMany`, args, mutate, fetch, false);
     }
 
     async function upsertPost<T extends Prisma.PostUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.PostUpsertArgs>) {
-        try {
-            return await request.post<Prisma.PostGetPayload<T>>(`${endpoint}/post/upsert`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.post<Prisma.PostGetPayload<T>, true>(`${endpoint}/post/upsert`, args, mutate, fetch, true);
     }
 
     async function deletePost<T extends Prisma.PostDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.PostDeleteArgs>) {
-        try {
-            return await request.del<Prisma.PostGetPayload<T>>(`${endpoint}/post/delete`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.PostGetPayload<T>, true>(`${endpoint}/post/delete`, args, mutate, fetch, true);
     }
 
     async function deleteManyPost<T extends Prisma.PostDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.PostDeleteManyArgs>,
     ) {
-        try {
-            return await request.del<Prisma.BatchPayload>(`${endpoint}/post/deleteMany`, args, mutate);
-        } catch (err: any) {
-            if (err.info?.prisma && err.info?.code === 'P2004' && err.info?.reason === 'RESULT_NOT_READABLE') {
-                // unable to readback data
-                return undefined;
-            } else {
-                throw err;
-            }
-        }
+        return await request.del<Prisma.BatchPayload, false>(`${endpoint}/post/deleteMany`, args, mutate, fetch, false);
     }
     return { createPost, updatePost, updateManyPost, upsertPost, deletePost, deleteManyPost };
 }
@@ -106,32 +59,32 @@ export function useFindManyPost<T extends Prisma.PostFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.PostFindManyArgs>,
     options?: RequestOptions<Array<Prisma.PostGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.PostGetPayload<T>>>(`${endpoint}/post/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Array<Prisma.PostGetPayload<T>>>(`${endpoint}/post/findMany`, args, options, fetch);
 }
 
 export function useFindUniquePost<T extends Prisma.PostFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.PostFindUniqueArgs>,
     options?: RequestOptions<Prisma.PostGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstPost<T extends Prisma.PostFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.PostFindFirstArgs>,
     options?: RequestOptions<Prisma.PostGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.PostGetPayload<T>>(`${endpoint}/post/findFirst`, args, options, fetch);
 }
 
 export function useAggregatePost<T extends Prisma.PostAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.PostAggregateArgs>,
     options?: RequestOptions<Prisma.GetPostAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetPostAggregateType<T>>(`${endpoint}/post/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.get<Prisma.GetPostAggregateType<T>>(`${endpoint}/post/aggregate`, args, options, fetch);
 }
 
 export function useGroupByPost<
@@ -141,7 +94,7 @@ export function useGroupByPost<
         ? { orderBy: Prisma.PostGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.PostGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -188,7 +141,7 @@ export function useGroupByPost<
     options?: RequestOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.PostGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.PostGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.PostGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -199,11 +152,11 @@ export function useGroupByPost<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.PostGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.PostGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.PostGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -212,7 +165,7 @@ export function useGroupByPost<
                   }
               >
             : InputErrors
-    >(`${endpoint}/post/groupBy`, args, options);
+    >(`${endpoint}/post/groupBy`, args, options, fetch);
 }
 
 export function useCountPost<T extends Prisma.PostCountArgs>(
@@ -225,12 +178,12 @@ export function useCountPost<T extends Prisma.PostCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.PostCountAggregateOutputType>
             : number
-    >(`${endpoint}/post/count`, args, options);
+    >(`${endpoint}/post/count`, args, options, fetch);
 }
