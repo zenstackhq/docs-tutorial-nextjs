@@ -3,7 +3,9 @@ import type { Prisma, Post } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -61,6 +63,17 @@ export function useFindManyPost<T extends Prisma.PostFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.PostGetPayload<T>>>(`${endpoint}/post/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyPost<T extends Prisma.PostFindManyArgs, R extends Array<Prisma.PostGetPayload<T>>>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.PostFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.PostGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.PostFindManyArgs> | undefined,
+        Array<Prisma.PostGetPayload<T>>
+    >(`${endpoint}/post/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniquePost<T extends Prisma.PostFindUniqueArgs>(

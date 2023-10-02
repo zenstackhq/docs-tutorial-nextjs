@@ -3,7 +3,9 @@ import type { Prisma, Session } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -99,6 +101,20 @@ export function useFindManySession<T extends Prisma.SessionFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return request.get<Array<Prisma.SessionGetPayload<T>>>(`${endpoint}/session/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManySession<
+    T extends Prisma.SessionFindManyArgs,
+    R extends Array<Prisma.SessionGetPayload<T>>,
+>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.SessionFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.SessionGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.SessionFindManyArgs> | undefined,
+        Array<Prisma.SessionGetPayload<T>>
+    >(`${endpoint}/session/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueSession<T extends Prisma.SessionFindUniqueArgs>(

@@ -3,7 +3,9 @@ import type { Prisma, VerificationToken } from '@prisma/client';
 import { useContext } from 'react';
 import {
     RequestHandlerContext,
+    type GetNextArgs,
     type RequestOptions,
+    type InfiniteRequestOptions,
     type PickEnumerable,
     type CheckSelect,
 } from '@zenstackhq/swr/runtime';
@@ -111,6 +113,20 @@ export function useFindManyVerificationToken<T extends Prisma.VerificationTokenF
         options,
         fetch,
     );
+}
+
+export function useInfiniteFindManyVerificationToken<
+    T extends Prisma.VerificationTokenFindManyArgs,
+    R extends Array<Prisma.VerificationTokenGetPayload<T>>,
+>(
+    getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs> | undefined, R>,
+    options?: InfiniteRequestOptions<Array<Prisma.VerificationTokenGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return request.infiniteGet<
+        Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs> | undefined,
+        Array<Prisma.VerificationTokenGetPayload<T>>
+    >(`${endpoint}/verificationToken/findMany`, getNextArgs, options, fetch);
 }
 
 export function useFindUniqueVerificationToken<T extends Prisma.VerificationTokenFindUniqueArgs>(
