@@ -1,93 +1,84 @@
 /* eslint-disable */
-import type { Prisma, VerificationToken } from '@prisma/client';
-import { useContext } from 'react';
+import type { Prisma } from '@prisma/client';
 import {
-    RequestHandlerContext,
     type GetNextArgs,
-    type RequestOptions,
-    type InfiniteRequestOptions,
+    type QueryOptions,
+    type InfiniteQueryOptions,
+    type MutationOptions,
     type PickEnumerable,
-    type CheckSelect,
+    useHooksContext,
 } from '@zenstackhq/swr/runtime';
+import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
 
+/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
 export function useMutateVerificationToken() {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const prefixesToMutate = [
-        `${endpoint}/verificationToken/find`,
-        `${endpoint}/verificationToken/aggregate`,
-        `${endpoint}/verificationToken/count`,
-        `${endpoint}/verificationToken/groupBy`,
-    ];
-    const mutate = request.getMutate(prefixesToMutate);
+    const { endpoint, fetch } = useHooksContext();
+    const invalidate = request.useInvalidation('VerificationToken', metadata);
 
+    /** @deprecated Use `useCreateVerificationToken` hook instead. */
     async function createVerificationToken<T extends Prisma.VerificationTokenCreateArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateArgs>,
     ) {
-        return await request.post<CheckSelect<T, VerificationToken, Prisma.VerificationTokenGetPayload<T>>, true>(
-            `${endpoint}/verificationToken/create`,
-            args,
-            mutate,
-            fetch,
-            true,
-        );
+        return await request.mutationRequest<
+            Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenCreateArgs> | undefined,
+            true
+        >('POST', `${endpoint}/verificationToken/create`, args, invalidate, fetch, true);
     }
 
+    /** @deprecated Use `useUpdateVerificationToken` hook instead. */
     async function updateVerificationToken<T extends Prisma.VerificationTokenUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateArgs>,
     ) {
-        return await request.put<Prisma.VerificationTokenGetPayload<T>, true>(
-            `${endpoint}/verificationToken/update`,
-            args,
-            mutate,
-            fetch,
-            true,
-        );
+        return await request.mutationRequest<
+            Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenUpdateArgs> | undefined,
+            true
+        >('PUT', `${endpoint}/verificationToken/update`, args, invalidate, fetch, true);
     }
 
+    /** @deprecated Use `useUpdateManyVerificationToken` hook instead. */
     async function updateManyVerificationToken<T extends Prisma.VerificationTokenUpdateManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateManyArgs>,
     ) {
-        return await request.put<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'PUT',
             `${endpoint}/verificationToken/updateMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
     }
 
+    /** @deprecated Use `useUpsertVerificationToken` hook instead. */
     async function upsertVerificationToken<T extends Prisma.VerificationTokenUpsertArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpsertArgs>,
     ) {
-        return await request.post<Prisma.VerificationTokenGetPayload<T>, true>(
-            `${endpoint}/verificationToken/upsert`,
-            args,
-            mutate,
-            fetch,
-            true,
-        );
+        return await request.mutationRequest<
+            Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenUpsertArgs> | undefined,
+            true
+        >('POST', `${endpoint}/verificationToken/upsert`, args, invalidate, fetch, true);
     }
 
+    /** @deprecated Use `useDeleteVerificationToken` hook instead. */
     async function deleteVerificationToken<T extends Prisma.VerificationTokenDeleteArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteArgs>,
     ) {
-        return await request.del<Prisma.VerificationTokenGetPayload<T>, true>(
-            `${endpoint}/verificationToken/delete`,
-            args,
-            mutate,
-            fetch,
-            true,
-        );
+        return await request.mutationRequest<
+            Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenDeleteArgs> | undefined,
+            true
+        >('DELETE', `${endpoint}/verificationToken/delete`, args, invalidate, fetch, true);
     }
 
+    /** @deprecated Use `useDeleteManyVerificationToken` hook instead. */
     async function deleteManyVerificationToken<T extends Prisma.VerificationTokenDeleteManyArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteManyArgs>,
     ) {
-        return await request.del<Prisma.BatchPayload, false>(
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'DELETE',
             `${endpoint}/verificationToken/deleteMany`,
             args,
-            mutate,
+            invalidate,
             fetch,
             false,
         );
@@ -102,17 +93,29 @@ export function useMutateVerificationToken() {
     };
 }
 
+export function useCreateVerificationToken(
+    options?: MutationOptions<
+        Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenCreateArgs> | undefined,
+        unknown,
+        Prisma.VerificationTokenCreateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'POST', 'create', metadata, options, true);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenCreateArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.VerificationTokenGetPayload<T> | undefined>;
+        },
+    };
+}
+
 export function useFindManyVerificationToken<T extends Prisma.VerificationTokenFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs>,
-    options?: RequestOptions<Array<Prisma.VerificationTokenGetPayload<T>>>,
+    options?: QueryOptions<Array<Prisma.VerificationTokenGetPayload<T> & { $optimistic?: boolean }>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Array<Prisma.VerificationTokenGetPayload<T>>>(
-        `${endpoint}/verificationToken/findMany`,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('VerificationToken', 'findMany', args, options);
 }
 
 export function useInfiniteFindManyVerificationToken<
@@ -120,52 +123,112 @@ export function useInfiniteFindManyVerificationToken<
     R extends Array<Prisma.VerificationTokenGetPayload<T>>,
 >(
     getNextArgs: GetNextArgs<Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs> | undefined, R>,
-    options?: InfiniteRequestOptions<Array<Prisma.VerificationTokenGetPayload<T>>>,
+    options?: InfiniteQueryOptions<Array<Prisma.VerificationTokenGetPayload<T>>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.infiniteGet<
-        Prisma.SelectSubset<T, Prisma.VerificationTokenFindManyArgs> | undefined,
-        Array<Prisma.VerificationTokenGetPayload<T>>
-    >(`${endpoint}/verificationToken/findMany`, getNextArgs, options, fetch);
+    return request.useInfiniteModelQuery('VerificationToken', 'findMany', getNextArgs, options);
 }
 
 export function useFindUniqueVerificationToken<T extends Prisma.VerificationTokenFindUniqueArgs>(
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindUniqueArgs>,
-    options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
+    options?: QueryOptions<Prisma.VerificationTokenGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.VerificationTokenGetPayload<T>>(
-        `${endpoint}/verificationToken/findUnique`,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('VerificationToken', 'findUnique', args, options);
 }
 
 export function useFindFirstVerificationToken<T extends Prisma.VerificationTokenFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.VerificationTokenFindFirstArgs>,
-    options?: RequestOptions<Prisma.VerificationTokenGetPayload<T>>,
+    options?: QueryOptions<Prisma.VerificationTokenGetPayload<T> & { $optimistic?: boolean }>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.VerificationTokenGetPayload<T>>(
-        `${endpoint}/verificationToken/findFirst`,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('VerificationToken', 'findFirst', args, options);
+}
+
+export function useUpdateVerificationToken(
+    options?: MutationOptions<
+        Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenUpdateArgs> | undefined,
+        unknown,
+        Prisma.VerificationTokenUpdateArgs
+    >,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'PUT', 'update', metadata, options, true);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenUpdateArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.VerificationTokenGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useUpdateManyVerificationToken(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.VerificationTokenUpdateManyArgs>,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'PUT', 'updateMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenUpdateManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateManyArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
+}
+
+export function useUpsertVerificationToken(
+    options?: MutationOptions<
+        Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenUpsertArgs> | undefined,
+        unknown,
+        Prisma.VerificationTokenUpsertArgs
+    >,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'POST', 'upsert', metadata, options, true);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenUpsertArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpsertArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.VerificationTokenGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteVerificationToken(
+    options?: MutationOptions<
+        Prisma.VerificationTokenGetPayload<Prisma.VerificationTokenDeleteArgs> | undefined,
+        unknown,
+        Prisma.VerificationTokenDeleteArgs
+    >,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'DELETE', 'delete', metadata, options, true);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenDeleteArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.VerificationTokenGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useDeleteManyVerificationToken(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.VerificationTokenDeleteManyArgs>,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'DELETE', 'deleteMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenDeleteManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenDeleteManyArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
+        },
+    };
 }
 
 export function useAggregateVerificationToken<T extends Prisma.VerificationTokenAggregateArgs>(
     args?: Prisma.Subset<T, Prisma.VerificationTokenAggregateArgs>,
-    options?: RequestOptions<Prisma.GetVerificationTokenAggregateType<T>>,
+    options?: QueryOptions<Prisma.GetVerificationTokenAggregateType<T>>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<Prisma.GetVerificationTokenAggregateType<T>>(
-        `${endpoint}/verificationToken/aggregate`,
-        args,
-        options,
-        fetch,
-    );
+    return request.useModelQuery('VerificationToken', 'aggregate', args, options);
 }
 
 export function useGroupByVerificationToken<
@@ -219,7 +282,7 @@ export function useGroupByVerificationToken<
           }[OrderFields],
 >(
     args?: Prisma.SubsetIntersection<T, Prisma.VerificationTokenGroupByArgs, OrderByArg> & InputErrors,
-    options?: RequestOptions<
+    options?: QueryOptions<
         {} extends InputErrors
             ? Array<
                   PickEnumerable<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
@@ -233,25 +296,12 @@ export function useGroupByVerificationToken<
             : InputErrors
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.VerificationTokenGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.VerificationTokenGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.VerificationTokenGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.VerificationTokenGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >(`${endpoint}/verificationToken/groupBy`, args, options, fetch);
+    return request.useModelQuery('VerificationToken', 'groupBy', args, options);
 }
 
 export function useCountVerificationToken<T extends Prisma.VerificationTokenCountArgs>(
     args?: Prisma.Subset<T, Prisma.VerificationTokenCountArgs>,
-    options?: RequestOptions<
+    options?: QueryOptions<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
@@ -259,12 +309,5 @@ export function useCountVerificationToken<T extends Prisma.VerificationTokenCoun
             : number
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return request.get<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.VerificationTokenCountAggregateOutputType>
-            : number
-    >(`${endpoint}/verificationToken/count`, args, options, fetch);
+    return request.useModelQuery('VerificationToken', 'count', args, options);
 }
