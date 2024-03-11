@@ -44,7 +44,7 @@ const SigninSignup = () => {
   );
 };
 
-const Posts = ({ user }: { user: AuthUser }) => {
+const Contents = ({ user }: { user: AuthUser }) => {
   // check login
   const { data: session } = useSession();
 
@@ -120,19 +120,20 @@ const Posts = ({ user }: { user: AuthUser }) => {
 
   return (
     <div className="container flex flex-col text-white">
-      <button
-        className="rounded border border-white p-2 text-lg"
-        onClick={onCreatePost}
-      >
-        + Create Post
-      </button>
-
-      <button
-        className="rounded border border-white p-2 text-lg"
-        onClick={onCreateImage}
-      >
-        + Create Image
-      </button>
+      <div className="flex justify-center space-x-4">
+        <button
+          className="rounded border border-white px-4 py-2 text-lg"
+          onClick={onCreatePost}
+        >
+          + Create Post
+        </button>
+        <button
+          className="rounded border border-white px-4 py-2 text-lg"
+          onClick={onCreateImage}
+        >
+          + Create Image
+        </button>
+      </div>
 
       <ul className="container mt-8 flex flex-col gap-2">
         {contents?.map((content) => {
@@ -157,7 +158,7 @@ const Posts = ({ user }: { user: AuthUser }) => {
                     src={content.url}
                     width={0}
                     height={0}
-                    sizes="50vw"
+                    sizes="20vw"
                     style={{ width: "100%", height: "auto" }}
                     alt="image"
                     priority
@@ -165,7 +166,7 @@ const Posts = ({ user }: { user: AuthUser }) => {
                 )}
                 <p className="text-lg"> by {content.author.email}</p>
               </p>
-              <div className="flex justify-between gap-1 align-middle text-base">
+              <div className="flex w-48 gap-1 text-base">
                 <button
                   className="underline"
                   onClick={() => onTogglePublished(content)}
@@ -205,7 +206,7 @@ const Home: NextPage = () => {
           <div className="flex flex-col">
             <Welcome user={session.user} />
             <section className="mt-10">
-              <Posts user={session.user} />
+              <Contents user={session.user} />
             </section>
           </div>
         ) : (

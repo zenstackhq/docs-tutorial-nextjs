@@ -9,13 +9,13 @@
     "lint": "next lint",
     "start": "next start",
     "package-clean": "npm rm @zenstackhq/runtime @zenstackhq/server zenstack @zenstackhq/swr",
-    "up": "npm run package-clean && npm i --save-exact @zenstackhq/runtime@latest @zenstackhq/server@latest && npm i -D --save-exact zenstack@latest @zenstackhq/swr@latest"
+    "up": "npm run package-clean && npm i --save-exact @zenstackhq/runtime@next @zenstackhq/server@next && npm i -D --save-exact zenstack@next @zenstackhq/swr@next"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.6",
     "@prisma/client": "^5.2.0",
-    "@zenstackhq/runtime": "^2.0.0-alpha.6",
-    "@zenstackhq/server": "^2.0.0-alpha.6",
+    "@zenstackhq/runtime": "2.0.0-alpha.7",
+    "@zenstackhq/server": "2.0.0-alpha.7",
     "next": "13.0.2",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
@@ -30,7 +30,7 @@
     "@types/react-dom": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
-    "@zenstackhq/swr": "^2.0.0-alpha.6",
+    "@zenstackhq/swr": "2.0.0-alpha.7",
     "autoprefixer": "^10.4.7",
     "eslint": "^8.26.0",
     "eslint-config-next": "13.0.2",
@@ -40,7 +40,7 @@
     "prisma": "^5.2.0",
     "tailwindcss": "^3.2.0",
     "typescript": "^4.8.4",
-    "zenstack": "^2.0.0-alpha.6"
+    "zenstack": "2.0.0-alpha.7"
   },
   "ct3aMetadata": {
     "initVersion": "6.11.3"
