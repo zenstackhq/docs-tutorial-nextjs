@@ -1,9 +1,18 @@
-import type { Post } from "@prisma/client";
+import type { Content } from "@prisma/client";
 import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
-import { useFindManyPost, useMutatePost } from "../lib/hooks";
+import Image from "next/image";
+import {
+  useFindManyContent,
+  useCreatePost,
+  useCreateImage,
+  useUpdateContent,
+  useCreateLike,
+  useDeleteManyLike,
+  useDeleteContent,
+} from "../lib/hooks";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -39,13 +48,24 @@ const Posts = ({ user }: { user: AuthUser }) => {
   // check login
   const { data: session } = useSession();
 
-  // Post crud hooks
-  const { createPost, updatePost, deletePost } = useMutatePost();
+  const { trigger: createPost } = useCreatePost();
+
+  const { trigger: createImage } = useCreateImage();
+
+  const { trigger: updateContent } = useUpdateContent();
+
+  const { trigger: deleteContent } = useDeleteContent();
+
+  const { trigger: deleteLike } = useDeleteManyLike();
+  const { trigger: createLike } = useCreateLike();
 
   // list all posts that're visible to the current user
-  const { data: posts } = useFindManyPost(
+  const { data: contents } = useFindManyContent(
     {
-      include: { author: true },
+      include: {
+        author: true,
+        likes: true,
+      },
       orderBy: { createdAt: "desc" },
     },
     // fetch only when user's logged in
@@ -63,15 +83,39 @@ const Posts = ({ user }: { user: AuthUser }) => {
     }
   }
 
-  async function onTogglePublished(post: Post) {
-    await updatePost({
-      where: { id: post.id },
-      data: { published: !post.published },
+  async function onCreateImage() {
+    const url = prompt("Enter image url");
+    if (url) {
+      await createImage({ data: { url, authorId: user.id } });
+    }
+  }
+
+  async function onTogglePublished(content: Content) {
+    await updateContent({
+      where: { id: content.id },
+      data: { published: !content.published },
     });
   }
 
-  async function onDelete(post: Post) {
-    await deletePost({ where: { id: post.id } });
+  async function onToggleLike(content: Content, isLiked: boolean) {
+    if (isLiked) {
+      await deleteLike({
+        where: {
+          authorId: user.id,
+        },
+      });
+    } else {
+      await createLike({
+        data: {
+          contentId: content.id,
+          authorId: user.id,
+        },
+      });
+    }
+  }
+
+  async function onDelete(content: Content) {
+    await deleteContent({ where: { id: content.id } });
   }
 
   return (
@@ -83,26 +127,64 @@ const Posts = ({ user }: { user: AuthUser }) => {
         + Create Post
       </button>
 
+      <button
+        className="rounded border border-white p-2 text-lg"
+        onClick={onCreateImage}
+      >
+        + Create Image
+      </button>
+
       <ul className="container mt-8 flex flex-col gap-2">
-        {posts?.map((post) => (
-          <li key={post.id} className="flex items-end justify-between gap-4">
-            <p className={`text-2xl ${!post.published ? "text-gray-400" : ""}`}>
-              {post.title}
-              <span className="text-lg"> by {post.author.email}</span>
-            </p>
-            <div className="flex w-32 justify-end gap-1 text-left">
-              <button
-                className="underline"
-                onClick={() => onTogglePublished(post)}
+        {contents?.map((content) => {
+          const isLiked = content.likes
+            .map((x) => x.authorId)
+            .includes(user.id);
+
+          return (
+            <li
+              key={content.id}
+              className="flex items-end justify-between gap-4"
+            >
+              <p
+                className={`text-2xl ${
+                  !content.published ? "text-gray-400" : ""
+                }`}
               >
-                {post.published ? "Unpublish" : "Publish"}
-              </button>
-              <button className="underline" onClick={() => onDelete(post)}>
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
+                {content.contentType == "Post" ? (
+                  content.title
+                ) : (
+                  <Image
+                    src={content.url}
+                    width={0}
+                    height={0}
+                    sizes="50vw"
+                    style={{ width: "100%", height: "auto" }}
+                    alt="image"
+                    priority
+                  ></Image>
+                )}
+                <p className="text-lg"> by {content.author.email}</p>
+              </p>
+              <div className="flex justify-between gap-1 align-middle text-base">
+                <button
+                  className="underline"
+                  onClick={() => onTogglePublished(content)}
+                >
+                  {content.published ? "Unpublish" : "Publish"}
+                </button>
+                <button className="underline" onClick={() => onDelete(content)}>
+                  Delete
+                </button>
+                <button
+                  className="underline"
+                  onClick={() => onToggleLike(content, isLiked)}
+                >
+                  {isLiked ? "UnLike" : "Like"} {content.likes.length}
+                </button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -19,20 +19,44 @@ plugin hooks {
   output = "./src/lib/hooks"
 }
 
-model Post {
+model Content {
   id String @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  title String
   published Boolean @default(false)
   author User @relation(fields: [authorId], references: [id])
   authorId String
+  contentType String
+  likes Like[]
+  @@delegate(contentType)
 
   // author has full access
   @@allow('all', auth() == author)
 
   // logged-in users can view published posts
   @@allow('read', auth() != null && published)
+}
+
+model Post extends Content {
+  title String
+}
+
+model Image extends Content {
+  url String
+}
+
+model Like {
+  id String @id @default(cuid())
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  content Content @relation(fields: [contentId], references: [id])
+  contentId String
+  @@unique([authorId, contentId])
+
+  // author has full access
+  @@allow('create,delete', auth() == author)
+  // logged-in users can view 
+  @@allow('read', auth() != null)
 }
 
 // Necessary for Next auth
@@ -67,10 +91,10 @@ model User {
   email String? @unique
   emailVerified DateTime?
   password String @password @omit
-  posts Post[]
-  image String?
   accounts Account[]
   sessions Session[]
+  content Content[]
+  likes Like[]
 
   // everyone can signup, and user profile is also publicly readable
   @@allow('create,read', true)

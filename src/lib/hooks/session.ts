@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@zenstackhq/runtime/prisma';
 import {
     type GetNextArgs,
     type QueryOptions,

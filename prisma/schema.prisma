@@ -12,16 +12,48 @@ generator client {
     provider = "prisma-client-js"
 }
 
+/// @@delegate(contentType)
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
-model Post {
+model Content {
     id String @id() @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
-    title String
     published Boolean @default(false)
     author User @relation(fields: [authorId], references: [id])
     authorId String
+    contentType String
+    likes Like[]
+    delegate_aux_post Post?
+    delegate_aux_image Image?
+}
+
+/// @@allow('all', auth() == author)
+/// @@allow('read', auth() != null && published)
+model Post {
+    id String @id()
+    title String
+    delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+/// @@allow('all', auth() == author)
+/// @@allow('read', auth() != null && published)
+model Image {
+    id String @id()
+    url String
+    delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+/// @@allow('create,delete', auth() == author)
+/// @@allow('read', auth() != null)
+model Like {
+    id String @id() @default(cuid())
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+    content Content @relation(fields: [contentId], references: [id])
+    contentId String
+
+    @@unique([authorId, contentId])
 }
 
 model Account {
@@ -60,10 +92,10 @@ model User {
     /// @password
     /// @omit
     password String
-    posts Post[]
-    image String?
     accounts Account[]
     sessions Session[]
+    content Content[]
+    likes Like[]
 }
 
 model VerificationToken {
