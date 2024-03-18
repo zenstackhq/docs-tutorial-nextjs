@@ -6,93 +6,9 @@ import {
     type InfiniteQueryOptions,
     type MutationOptions,
     type PickEnumerable,
-    useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
-
-/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
-export function useMutateImage() {
-    const { endpoint, fetch } = useHooksContext();
-    const invalidate = request.useInvalidation('Image', metadata);
-
-    /** @deprecated Use `useCreateImage` hook instead. */
-    async function createImage<T extends Prisma.ImageCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ImageCreateArgs>) {
-        return await request.mutationRequest<Prisma.ImageGetPayload<Prisma.ImageCreateArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/image/create`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateImage` hook instead. */
-    async function updateImage<T extends Prisma.ImageUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ImageUpdateArgs>) {
-        return await request.mutationRequest<Prisma.ImageGetPayload<Prisma.ImageUpdateArgs> | undefined, true>(
-            'PUT',
-            `${endpoint}/image/update`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateManyImage` hook instead. */
-    async function updateManyImage<T extends Prisma.ImageUpdateManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.ImageUpdateManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'PUT',
-            `${endpoint}/image/updateMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-
-    /** @deprecated Use `useUpsertImage` hook instead. */
-    async function upsertImage<T extends Prisma.ImageUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.ImageUpsertArgs>) {
-        return await request.mutationRequest<Prisma.ImageGetPayload<Prisma.ImageUpsertArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/image/upsert`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteImage` hook instead. */
-    async function deleteImage<T extends Prisma.ImageDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ImageDeleteArgs>) {
-        return await request.mutationRequest<Prisma.ImageGetPayload<Prisma.ImageDeleteArgs> | undefined, true>(
-            'DELETE',
-            `${endpoint}/image/delete`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteManyImage` hook instead. */
-    async function deleteManyImage<T extends Prisma.ImageDeleteManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.ImageDeleteManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'DELETE',
-            `${endpoint}/image/deleteMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-    return { createImage, updateImage, updateManyImage, upsertImage, deleteImage, deleteManyImage };
-}
 
 export function useCreateImage(
     options?: MutationOptions<

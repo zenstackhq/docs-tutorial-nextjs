@@ -6,93 +6,9 @@ import {
     type InfiniteQueryOptions,
     type MutationOptions,
     type PickEnumerable,
-    useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
-
-/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
-export function useMutateUser() {
-    const { endpoint, fetch } = useHooksContext();
-    const invalidate = request.useInvalidation('User', metadata);
-
-    /** @deprecated Use `useCreateUser` hook instead. */
-    async function createUser<T extends Prisma.UserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>) {
-        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserCreateArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/user/create`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateUser` hook instead. */
-    async function updateUser<T extends Prisma.UserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>) {
-        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserUpdateArgs> | undefined, true>(
-            'PUT',
-            `${endpoint}/user/update`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateManyUser` hook instead. */
-    async function updateManyUser<T extends Prisma.UserUpdateManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.UserUpdateManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'PUT',
-            `${endpoint}/user/updateMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-
-    /** @deprecated Use `useUpsertUser` hook instead. */
-    async function upsertUser<T extends Prisma.UserUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpsertArgs>) {
-        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserUpsertArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/user/upsert`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteUser` hook instead. */
-    async function deleteUser<T extends Prisma.UserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
-        return await request.mutationRequest<Prisma.UserGetPayload<Prisma.UserDeleteArgs> | undefined, true>(
-            'DELETE',
-            `${endpoint}/user/delete`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteManyUser` hook instead. */
-    async function deleteManyUser<T extends Prisma.UserDeleteManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.UserDeleteManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'DELETE',
-            `${endpoint}/user/deleteMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-    return { createUser, updateUser, updateManyUser, upsertUser, deleteUser, deleteManyUser };
-}
 
 export function useCreateUser(
     options?: MutationOptions<Prisma.UserGetPayload<Prisma.UserCreateArgs> | undefined, unknown, Prisma.UserCreateArgs>,

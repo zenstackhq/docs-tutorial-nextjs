@@ -6,93 +6,9 @@ import {
     type InfiniteQueryOptions,
     type MutationOptions,
     type PickEnumerable,
-    useHooksContext,
 } from '@zenstackhq/swr/runtime';
 import metadata from './__model_meta';
 import * as request from '@zenstackhq/swr/runtime';
-
-/** @deprecated Use mutation hooks (useCreateXXX, useUpdateXXX, etc.) instead. */
-export function useMutateLike() {
-    const { endpoint, fetch } = useHooksContext();
-    const invalidate = request.useInvalidation('Like', metadata);
-
-    /** @deprecated Use `useCreateLike` hook instead. */
-    async function createLike<T extends Prisma.LikeCreateArgs>(args: Prisma.SelectSubset<T, Prisma.LikeCreateArgs>) {
-        return await request.mutationRequest<Prisma.LikeGetPayload<Prisma.LikeCreateArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/like/create`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateLike` hook instead. */
-    async function updateLike<T extends Prisma.LikeUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.LikeUpdateArgs>) {
-        return await request.mutationRequest<Prisma.LikeGetPayload<Prisma.LikeUpdateArgs> | undefined, true>(
-            'PUT',
-            `${endpoint}/like/update`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useUpdateManyLike` hook instead. */
-    async function updateManyLike<T extends Prisma.LikeUpdateManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.LikeUpdateManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'PUT',
-            `${endpoint}/like/updateMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-
-    /** @deprecated Use `useUpsertLike` hook instead. */
-    async function upsertLike<T extends Prisma.LikeUpsertArgs>(args: Prisma.SelectSubset<T, Prisma.LikeUpsertArgs>) {
-        return await request.mutationRequest<Prisma.LikeGetPayload<Prisma.LikeUpsertArgs> | undefined, true>(
-            'POST',
-            `${endpoint}/like/upsert`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteLike` hook instead. */
-    async function deleteLike<T extends Prisma.LikeDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.LikeDeleteArgs>) {
-        return await request.mutationRequest<Prisma.LikeGetPayload<Prisma.LikeDeleteArgs> | undefined, true>(
-            'DELETE',
-            `${endpoint}/like/delete`,
-            args,
-            invalidate,
-            fetch,
-            true,
-        );
-    }
-
-    /** @deprecated Use `useDeleteManyLike` hook instead. */
-    async function deleteManyLike<T extends Prisma.LikeDeleteManyArgs>(
-        args: Prisma.SelectSubset<T, Prisma.LikeDeleteManyArgs>,
-    ) {
-        return await request.mutationRequest<Prisma.BatchPayload, false>(
-            'DELETE',
-            `${endpoint}/like/deleteMany`,
-            args,
-            invalidate,
-            fetch,
-            false,
-        );
-    }
-    return { createLike, updateLike, updateManyLike, upsertLike, deleteLike, deleteManyLike };
-}
 
 export function useCreateLike(
     options?: MutationOptions<Prisma.LikeGetPayload<Prisma.LikeCreateArgs> | undefined, unknown, Prisma.LikeCreateArgs>,
