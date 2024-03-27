@@ -1,9 +1,7 @@
-import type { Content } from "@prisma/client";
 import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
-import Image from "next/image";
 import {
   useFindManyContent,
   useCreatePost,
@@ -13,6 +11,8 @@ import {
   useDeleteManyLike,
   useDeleteContent,
 } from "../lib/hooks";
+import type { Content } from "@zenstackhq/runtime/prisma";
+import * as ContentComponents from "./content-components";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -42,6 +42,21 @@ const SigninSignup = () => {
       </Link>
     </div>
   );
+};
+
+// Polymorphic Component
+type contentType = Content["contentType"];
+
+const PolymorphicContent = ({
+  componentName,
+  content,
+}: {
+  componentName: contentType;
+  content: Content;
+}) => {
+  const Component = ContentComponents[componentName];
+  // actual content component
+  return Component ? <Component content={content} /> : null;
 };
 
 const Contents = ({ user }: { user: AuthUser }) => {
@@ -146,26 +161,18 @@ const Contents = ({ user }: { user: AuthUser }) => {
               key={content.id}
               className="flex items-end justify-between gap-4"
             >
-              <p
+              <div
                 className={`text-2xl ${
                   !content.published ? "text-gray-400" : ""
                 }`}
               >
-                {content.contentType == "Post" ? (
-                  content.title
-                ) : (
-                  <Image
-                    src={content.url}
-                    width={0}
-                    height={0}
-                    sizes="20vw"
-                    style={{ width: "100%", height: "auto" }}
-                    alt="image"
-                    priority
-                  ></Image>
-                )}
+                <PolymorphicContent
+                  componentName={content.contentType}
+                  content={content}
+                ></PolymorphicContent>
                 <p className="text-lg"> by {content.author.email}</p>
-              </p>
+              </div>
+
               <div className="flex w-48 gap-1 text-base">
                 <button
                   className="underline"
