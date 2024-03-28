@@ -7,15 +7,15 @@ import type {
 import NextImage from "next/image";
 
 export const Post = ({ content }: { content: Content }) => {
-  const Post = content as PostType;
-  return <span>{Post.title}</span>;
+  const post = content as PostType;
+  return <span>{post.title}</span>;
 };
 
 export const Image = ({ content }: { content: Content }) => {
-  const Image = content as ImageType;
+  const image = content as ImageType;
   return (
     <NextImage
-      src={Image.url}
+      src={image.url}
       width={0}
       height={0}
       sizes="20vw"
