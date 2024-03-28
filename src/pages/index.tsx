@@ -44,16 +44,8 @@ const SigninSignup = () => {
   );
 };
 
-// Polymorphic Component
-type contentType = Content["contentType"];
-
-const PolymorphicContent = ({
-  componentName,
-  content,
-}: {
-  componentName: contentType;
-  content: Content;
-}) => {
+const PolymorphicContent = ({ content }: { content: Content }) => {
+  const componentName = content.contentType;
   const Component = ContentComponents[componentName];
   // actual content component
   return Component ? <Component content={content} /> : null;
@@ -166,10 +158,7 @@ const Contents = ({ user }: { user: AuthUser }) => {
                   !content.published ? "text-gray-400" : ""
                 }`}
               >
-                <PolymorphicContent
-                  componentName={content.contentType}
-                  content={content}
-                ></PolymorphicContent>
+                <PolymorphicContent content={content}></PolymorphicContent>
                 <p className="text-lg"> by {content.author.email}</p>
               </div>
 
