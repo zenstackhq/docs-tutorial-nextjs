@@ -3,7 +3,12 @@ import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
-import { useFindManyPost, useMutatePost } from "../lib/hooks";
+import {
+  useCreatePost,
+  useDeletePost,
+  useFindManyPost,
+  useUpdatePost,
+} from "../lib/hooks";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -40,7 +45,9 @@ const Posts = ({ user }: { user: AuthUser }) => {
   const { data: session } = useSession();
 
   // Post crud hooks
-  const { createPost, updatePost, deletePost } = useMutatePost();
+  const { trigger: createPost } = useCreatePost();
+  const { trigger: updatePost } = useUpdatePost();
+  const { trigger: deletePost } = useDeletePost();
 
   // list all posts that're visible to the current user
   const { data: posts } = useFindManyPost(
