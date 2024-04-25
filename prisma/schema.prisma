@@ -4,105 +4,105 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 datasource db {
-    provider = "sqlite"
-    url = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 /// @@delegate(contentType)
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
 model Content {
-    id String @id() @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    published Boolean @default(false)
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
-    contentType String
-    likes Like[]
-    delegate_aux_post Post?
-    delegate_aux_image Image?
+  id                 String   @id() @default(cuid())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt()
+  published          Boolean  @default(false)
+  author             User     @relation(fields: [authorId], references: [id])
+  authorId           String
+  contentType        String
+  likes              Like[]
+  delegate_aux_post  Post?
+  delegate_aux_image Image?
 }
 
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
 model Post {
-    id String @id()
-    title String
-    delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                   String  @id()
+  title                String
+  delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
 model Image {
-    id String @id()
-    url String
-    delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                   String  @id()
+  url                  String
+  delegate_aux_content Content @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 /// @@allow('create,delete', auth() == author)
 /// @@allow('read', auth() != null)
 model Like {
-    id String @id() @default(cuid())
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
-    content Content @relation(fields: [contentId], references: [id])
-    contentId String
+  id        String  @id() @default(cuid())
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+  content   Content @relation(fields: [contentId], references: [id])
+  contentId String
 
-    @@unique([authorId, contentId])
+  @@unique([authorId, contentId])
 }
 
 model Account {
-    id String @id() @default(cuid())
-    userId String
-    type String
-    provider String
-    providerAccountId String
-    refresh_token String?
-    access_token String?
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String?
-    session_state String?
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id() @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id String @id() @default(cuid())
-    sessionToken String @unique()
-    userId String
-    expires DateTime
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id() @default(cuid())
+  sessionToken String   @unique()
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('create,read', true)
 /// @@allow('update,delete', auth() == this)
 model User {
-    id String @id() @default(cuid())
-    name String?
-    email String? @unique()
-    emailVerified DateTime?
-    /// @password
-    /// @omit
-    password String
-    accounts Account[]
-    sessions Session[]
-    content Content[]
-    likes Like[]
+  id            String    @id() @default(cuid())
+  name          String?
+  email         String?   @unique()
+  emailVerified DateTime?
+  /// @password
+  /// @omit
+  password      String
+  accounts      Account[]
+  sessions      Session[]
+  content       Content[]
+  likes         Like[]
 }
 
 model VerificationToken {
-    id String @id() @default(cuid())
-    identifier String
-    token String @unique()
-    expires DateTime
+  id         String   @id() @default(cuid())
+  identifier String
+  token      String   @unique()
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }

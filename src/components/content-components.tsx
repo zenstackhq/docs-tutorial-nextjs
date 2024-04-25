@@ -1,8 +1,8 @@
 import type {
   Content,
-  Post as PostType,
   Image as ImageType,
-} from "@zenstackhq/runtime/prisma";
+  Post as PostType,
+} from "@zenstackhq/runtime/models";
 
 import NextImage from "next/image";
 

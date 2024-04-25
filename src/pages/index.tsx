@@ -1,18 +1,18 @@
+import type { Content } from "@zenstackhq/runtime/models";
 import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
+import * as ContentComponents from "../components/content-components";
 import {
-  useFindManyContent,
-  useCreatePost,
   useCreateImage,
-  useUpdateContent,
   useCreateLike,
-  useDeleteManyLike,
+  useCreatePost,
   useDeleteContent,
+  useDeleteManyLike,
+  useFindManyContent,
+  useUpdateContent,
 } from "../lib/hooks";
-import type { Content } from "@zenstackhq/runtime/prisma";
-import * as ContentComponents from "./content-components";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -86,14 +86,14 @@ const Contents = ({ user }: { user: AuthUser }) => {
   async function onCreatePost() {
     const title = prompt("Enter post title");
     if (title) {
-      await createPost({ data: { title, authorId: user.id } });
+      await createPost({ data: { title } });
     }
   }
 
   async function onCreateImage() {
     const url = prompt("Enter image url");
     if (url) {
-      await createImage({ data: { url, authorId: user.id } });
+      await createImage({ data: { url } });
     }
   }
 
@@ -115,7 +115,6 @@ const Contents = ({ user }: { user: AuthUser }) => {
       await createLike({
         data: {
           contentId: content.id,
-          authorId: user.id,
         },
       });
     }
