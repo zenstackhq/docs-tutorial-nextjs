@@ -28,6 +28,20 @@ export function useMutatePost() {
         );
     }
 
+    /** @deprecated Use `useCreateManyPost` hook instead. */
+    async function createManyPost<T extends Prisma.PostCreateManyArgs>(
+        args: Prisma.SelectSubset<T, Prisma.PostCreateManyArgs>,
+    ) {
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
+            `${endpoint}/post/createMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
+    }
+
     /** @deprecated Use `useUpdatePost` hook instead. */
     async function updatePost<T extends Prisma.PostUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.PostUpdateArgs>) {
         return await request.mutationRequest<Prisma.PostGetPayload<Prisma.PostUpdateArgs> | undefined, true>(
@@ -91,7 +105,7 @@ export function useMutatePost() {
             false,
         );
     }
-    return { createPost, updatePost, updateManyPost, upsertPost, deletePost, deleteManyPost };
+    return { createPost, createManyPost, updatePost, updateManyPost, upsertPost, deletePost, deleteManyPost };
 }
 
 export function useCreatePost(
@@ -102,6 +116,16 @@ export function useCreatePost(
         ...mutation,
         trigger: <T extends Prisma.PostCreateArgs>(args: Prisma.SelectSubset<T, Prisma.PostCreateArgs>) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.PostGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyPost(options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.PostCreateManyArgs>) {
+    const mutation = request.useModelMutation('Post', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.PostCreateManyArgs>(args: Prisma.SelectSubset<T, Prisma.PostCreateManyArgs>) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
 }

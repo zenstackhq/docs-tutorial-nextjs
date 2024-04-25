@@ -26,6 +26,20 @@ export function useMutateVerificationToken() {
         >('POST', `${endpoint}/verificationToken/create`, args, invalidate, fetch, true);
     }
 
+    /** @deprecated Use `useCreateManyVerificationToken` hook instead. */
+    async function createManyVerificationToken<T extends Prisma.VerificationTokenCreateManyArgs>(
+        args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateManyArgs>,
+    ) {
+        return await request.mutationRequest<Prisma.BatchPayload, false>(
+            'POST',
+            `${endpoint}/verificationToken/createMany`,
+            args,
+            invalidate,
+            fetch,
+            false,
+        );
+    }
+
     /** @deprecated Use `useUpdateVerificationToken` hook instead. */
     async function updateVerificationToken<T extends Prisma.VerificationTokenUpdateArgs>(
         args: Prisma.SelectSubset<T, Prisma.VerificationTokenUpdateArgs>,
@@ -85,6 +99,7 @@ export function useMutateVerificationToken() {
     }
     return {
         createVerificationToken,
+        createManyVerificationToken,
         updateVerificationToken,
         updateManyVerificationToken,
         upsertVerificationToken,
@@ -107,6 +122,20 @@ export function useCreateVerificationToken(
             args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateArgs>,
         ) => {
             return mutation.trigger(args, options as any) as Promise<Prisma.VerificationTokenGetPayload<T> | undefined>;
+        },
+    };
+}
+
+export function useCreateManyVerificationToken(
+    options?: MutationOptions<Prisma.BatchPayload, unknown, Prisma.VerificationTokenCreateManyArgs>,
+) {
+    const mutation = request.useModelMutation('VerificationToken', 'POST', 'createMany', metadata, options, false);
+    return {
+        ...mutation,
+        trigger: <T extends Prisma.VerificationTokenCreateManyArgs>(
+            args: Prisma.SelectSubset<T, Prisma.VerificationTokenCreateManyArgs>,
+        ) => {
+            return mutation.trigger(args, options as any) as Promise<Prisma.BatchPayload>;
         },
     };
 }
