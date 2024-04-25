@@ -19,7 +19,7 @@ model Post {
   title     String
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  authorId  String   @default(auth().id)
 
   // author has full access
   @@allow('all', auth() == author)

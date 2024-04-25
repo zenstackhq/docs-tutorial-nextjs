@@ -3,7 +3,12 @@ import { type NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
-import { useFindManyPost, useMutatePost } from "../lib/hooks";
+import {
+  useCreatePost,
+  useDeletePost,
+  useFindManyPost,
+  useUpdatePost,
+} from "../lib/hooks";
 
 type AuthUser = { id: string; email?: string | null };
 
@@ -35,12 +40,14 @@ const SigninSignup = () => {
   );
 };
 
-const Posts = ({ user }: { user: AuthUser }) => {
+const Posts = () => {
   // check login
   const { data: session } = useSession();
 
   // Post crud hooks
-  const { createPost, updatePost, deletePost } = useMutatePost();
+  const { trigger: createPost } = useCreatePost();
+  const { trigger: updatePost } = useUpdatePost();
+  const { trigger: deletePost } = useDeletePost();
 
   // list all posts that're visible to the current user
   const { data: posts } = useFindManyPost(
@@ -59,7 +66,7 @@ const Posts = ({ user }: { user: AuthUser }) => {
   async function onCreatePost() {
     const title = prompt("Enter post title");
     if (title) {
-      await createPost({ data: { title, authorId: user.id } });
+      await createPost({ data: { title } });
     }
   }
 
@@ -123,7 +130,7 @@ const Home: NextPage = () => {
           <div className="flex flex-col">
             <Welcome user={session.user} />
             <section className="mt-10">
-              <Posts user={session.user} />
+              <Posts />
             </section>
           </div>
         ) : (

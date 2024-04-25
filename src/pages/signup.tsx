@@ -3,12 +3,12 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
 import { useState, type FormEvent } from "react";
-import { useMutateUser } from "../lib/hooks";
+import { useCreateUser } from "../lib/hooks";
 
 const Signup: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { createUser: signup } = useMutateUser();
+  const { trigger: signup } = useCreateUser();
 
   async function onSignup(e: FormEvent) {
     e.preventDefault();

@@ -4,73 +4,73 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 datasource db {
-    provider = "sqlite"
-    url = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 /// @@allow('all', auth() == author)
 /// @@allow('read', auth() != null && published)
 model Post {
-    id String @id() @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    title String
-    published Boolean @default(false)
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
+  id        String   @id() @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  title     String
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
 }
 
 model Account {
-    id String @id() @default(cuid())
-    userId String
-    type String
-    provider String
-    providerAccountId String
-    refresh_token String?
-    access_token String?
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String?
-    session_state String?
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id() @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id String @id() @default(cuid())
-    sessionToken String @unique()
-    userId String
-    expires DateTime
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id() @default(cuid())
+  sessionToken String   @unique()
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('create,read', true)
 /// @@allow('update,delete', auth() == this)
 model User {
-    id String @id() @default(cuid())
-    name String?
-    email String? @unique()
-    emailVerified DateTime?
-    /// @password
-    /// @omit
-    password String
-    posts Post[]
-    image String?
-    accounts Account[]
-    sessions Session[]
+  id            String    @id() @default(cuid())
+  name          String?
+  email         String?   @unique()
+  emailVerified DateTime?
+  /// @password
+  /// @omit
+  password      String
+  posts         Post[]
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model VerificationToken {
-    id String @id() @default(cuid())
-    identifier String
-    token String @unique()
-    expires DateTime
+  id         String   @id() @default(cuid())
+  identifier String
+  token      String   @unique()
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
