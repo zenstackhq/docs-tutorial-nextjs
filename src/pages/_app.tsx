@@ -1,13 +1,17 @@
-import { GeistSans } from "geist/font/sans";
 import { type AppType } from "next/app";
+import { type Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 
-import "~/styles/globals.css";
+import "../styles/globals.css";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
-    <div className={GeistSans.className}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
-    </div>
+    </SessionProvider>
   );
 };
 
