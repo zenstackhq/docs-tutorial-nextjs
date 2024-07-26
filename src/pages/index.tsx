@@ -45,9 +45,9 @@ const SigninSignup = () => {
 
 const Posts = () => {
   // Post crud hooks
-  const { trigger: createPost } = useCreatePost();
-  const { trigger: updatePost } = useUpdatePost();
-  const { trigger: deletePost } = useDeletePost();
+  const { mutateAsync: createPost } = useCreatePost();
+  const { mutateAsync: updatePost } = useUpdatePost();
+  const { mutateAsync: deletePost } = useDeletePost();
 
   // list all posts that're visible to the current user, together with their authors
   const { data: posts } = useFindManyPost({

@@ -6,7 +6,9 @@ generator client {
 }
 
 plugin hooks {
-    provider = '@zenstackhq/swr'
+    provider = '@zenstackhq/tanstack-query'
+    target = 'react'
+    version = 'v5'
     output = "./src/lib/hooks"
 }
 

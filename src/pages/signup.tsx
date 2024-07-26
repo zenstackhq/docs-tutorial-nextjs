@@ -9,7 +9,7 @@ import { useCreateUser } from "../lib/hooks";
 const Signup: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { trigger: signup } = useCreateUser();
+  const { mutateAsync: signup } = useCreateUser();
 
   async function onSignup(e: FormEvent) {
     e.preventDefault();
