@@ -36,7 +36,7 @@ const Signin: NextPage = () => {
                         type='email'
                         value={email}
                         onChange={(e) => setEmail(e.currentTarget.value)}
-                        className='ml-4 w-72 rounded border p-2'
+                        className='ml-4 w-72 rounded border p-2 bg-white'
                     />
                 </div>
                 <div>
@@ -48,7 +48,7 @@ const Signin: NextPage = () => {
                         type='password'
                         value={password}
                         onChange={(e) => setPassword(e.currentTarget.value)}
-                        className='ml-4 w-72 rounded border p-2'
+                        className='ml-4 w-72 rounded border p-2 bg-white'
                     />
                 </div>
                 <input
