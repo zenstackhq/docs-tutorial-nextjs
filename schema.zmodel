@@ -22,17 +22,20 @@ plugin hooks {
 }
 
 model Post {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title     String
-    published Boolean  @default(false)
-    author    User     @relation(fields: [authorId], references: [id])
-    authorId  String   @default(auth().id)
+    id          Int      @id @default(autoincrement())
+    name        String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    published   Boolean  @default(false)
 
+
+    createdBy   User     @relation(fields: [createdById], references: [id])
+    createdById String   @default(auth().id)
+
+    @@index([name])
 
     // author has full access
-    @@allow('all', auth() == author)
+    @@allow('all', auth() == createdBy)
 
     // logged-in users can view published posts
     @@allow('read', auth() != null && published)

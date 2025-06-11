@@ -43,14 +43,14 @@ const Posts = () => {
 
     // list all posts that're visible to the current user, together with their authors
     const { data: posts } = useFindManyPost({
-        include: { author: true },
+        include: { createdBy: true },
         orderBy: { createdAt: 'desc' },
     });
 
     async function onCreatePost() {
-        const title = prompt('Enter post title');
-        if (title) {
-            await createPost({ data: { title } });
+        const name = prompt('Enter post name');
+        if (name) {
+            await createPost({ data: { name } });
         }
     }
 
@@ -75,8 +75,8 @@ const Posts = () => {
                 {posts?.map((post) => (
                     <li key={post.id} className='flex items-end justify-between gap-4'>
                         <p className={`text-2xl ${!post.published ? 'text-gray-400' : ''}`}>
-                            {post.title}
-                            <span className='text-lg'> by {post.author.email}</span>
+                            {post.name}
+                            <span className='text-lg'> by {post.createdBy.email}</span>
                         </p>
                         <div className='flex w-32 justify-end gap-1 text-left'>
                             <button className='underline' onClick={() => void onTogglePublished(post)}>

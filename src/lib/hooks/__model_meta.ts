@@ -11,9 +11,13 @@ const metadata = {
             name: 'Post', fields: {
                 id: {
                     name: "id",
-                    type: "String",
+                    type: "Int",
                     isId: true,
                     attributes: [{ "name": "@default", "args": [] }],
+                    isAutoIncrement: true,
+                }, name: {
+                    name: "name",
+                    type: "String",
                 }, createdAt: {
                     name: "createdAt",
                     type: "DateTime",
@@ -22,27 +26,24 @@ const metadata = {
                     name: "updatedAt",
                     type: "DateTime",
                     attributes: [{ "name": "@updatedAt", "args": [] }],
-                }, title: {
-                    name: "title",
-                    type: "String",
                 }, published: {
                     name: "published",
                     type: "Boolean",
                     attributes: [{ "name": "@default", "args": [{ "value": false }] }],
-                }, author: {
-                    name: "author",
+                }, createdBy: {
+                    name: "createdBy",
                     type: "User",
                     isDataModel: true,
                     backLink: 'posts',
                     isRelationOwner: true,
-                    foreignKeyMapping: { "id": "authorId" },
-                }, authorId: {
-                    name: "authorId",
+                    foreignKeyMapping: { "id": "createdById" },
+                }, createdById: {
+                    name: "createdById",
                     type: "String",
                     attributes: [{ "name": "@default", "args": [] }],
-                    defaultValueProvider: $default$Post$authorId,
+                    defaultValueProvider: $default$Post$createdById,
                     isForeignKey: true,
-                    relationField: 'author',
+                    relationField: 'createdBy',
                 },
             }, uniqueConstraints: {
                 id: {
@@ -203,7 +204,7 @@ const metadata = {
                     type: "Post",
                     isDataModel: true,
                     isArray: true,
-                    backLink: 'author',
+                    backLink: 'createdBy',
                 },
             }, uniqueConstraints: {
                 id: {
@@ -248,7 +249,7 @@ const metadata = {
 
 };
 
-function $default$Post$authorId(user: any): unknown {
+function $default$Post$createdById(user: any): unknown {
     return user?.id;
 }
 export default metadata;

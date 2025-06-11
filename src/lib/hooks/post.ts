@@ -328,7 +328,7 @@ export function useSuspenseCountPost<TArgs extends Prisma.PostCountArgs, TQueryF
     return useSuspenseModelQuery<TQueryFnData, TData, TError>('Post', `${endpoint}/post/count`, args, options, fetch);
 }
 
-export function useCheckPost<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: string; title?: string; published?: boolean; authorId?: string }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
+export function useCheckPost<TError = DefaultError>(args: { operation: PolicyCrudKind; where?: { id?: number; name?: string; published?: boolean; createdById?: string }; }, options?: (Omit<UseQueryOptions<boolean, TError, boolean>, 'queryKey'> & ExtraQueryOptions)) {
     const { endpoint, fetch } = getHooksContext();
     return useModelQuery<boolean, boolean, TError>('Post', `${endpoint}/post/check`, args, options, fetch);
 }
